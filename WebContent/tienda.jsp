@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <!-- Inclusión de jsp tags -->
 <%@ page import="java.util.List" %>
 <%@ page import="modelos.Producto" %>
 <!DOCTYPE html>
@@ -139,31 +140,28 @@
                 	<h1 class="titulo">Todos nuestros productos</h1><br><br><br>
                 	<table id="carrito">
  
-                    	<% List<Producto> productos = (List<Producto>) request.getAttribute("productos"); %>
+                    	
+                    	<c:set var="i" value="0"/>
                         <!--  sacar la lista de productos que guardé en el servlet para poder recorrerla -->
-                       	<% for(int i = 0; i < productos.size(); i++) { 
-                           	Producto p = productos.get(i);
-                           
-                        	 //Cada vez que la i sea divisor de 4,creamos un <tr>
-                           if(i % 4 == 0) { %>  
- 
-                    	<tr>
-                        	<%	
-                    		}
-                    	%>
+                       <c:forEach items="${productos}" var="p">
+                       	
+                       	<!--  Cada vez que la i sea divisor de 4,creamos un <tr>-->
+                          <c:if test="${ i % 4 == 0}">
+							<tr>
+						</c:if>
 
                     	<td class="productoHover">
-                        	<h2> <span class="referenciaA"><%= p.getReferenciaProducto() %> </span><br> <%= p.getNombreProducto() %></h2>
-                        	<img src="<%= request.getContextPath() %>/imagenes/savethegreen/productos/<%= p.getImagen() %>" style="border-radius: 10%; width: 300px; height: 200px;">
-                        	<span class="referencia"><br><%= p.getPrecioProducto() %> €/unidad</span>
+                        	<h2> <span class="referencia">${p._ref} </span><br> ${p._nombreP} </h2>
+                        	<img src="/imagenes/savethegreen/productos/${p.imagen}" style="border-radius: 10%; width: 300px; height: 200px;">
+                        	<span class="referencia"><br>${p._precioP} €/unidad</span>
                         	<div>
-                        		<form method="post" action="<%= request.getContextPath() %>/productos?accion=agregar"  id="taginline" >
-                            		<input type="hidden" name="idProducto" value="<%= p.getId() %>">      
+                        		<form method="post" action="ProductoServlet"  id="taginline" >
+                            		<input type="hidden" name="idProducto" value="${p.id }">      
                             		<input type="hidden" name="accion" value="agregar">
                             		<button data-text="+" onclick="suma()" class="btn btn-primary anadir botonTienda" type="submit" style="margin-left: -50%; font-weigth: bold; font-size: 1.5em; background-color: #D7B845;">+</button>
                        		 	</form>
-                       			<form method="post" action="<%= request.getContextPath() %>/productos?accion=quitar"  id="taginline">
-                            		<input type="hidden" name="idProducto" value="<%= p.getId() %>">
+                       			<form method="post" action="ProductoServlet"  id="taginline">
+                            		<input type="hidden" name="idProducto" value="${p.id }">
                             		<input type="hidden" name="accion" value="quitar">
                             		<button data-text="-" onclick="resta()" class="btn btn-primary quitar botonTienda" style="background-color: #D7B845; margin-top: -34%; margin-left: 50%; font-weigth: bold; font-size: 1.5em;">-</button>
                             		
@@ -173,15 +171,17 @@
                     	</td>
                     
                        	 <!--  Cada vez que la siguiente i sea divisor de 4,cerramos el tr -->
-                    		<% if((i + 1) % 4 == 0) { %>   
+                    		   <c:if test="${(i + 1) % 4 == 0}">
                   		  		</tr>
-                			    <% } %>
-              				  <% } %>
-				
+                			   </c:if>
+                			
+                		    <!-- Aumenta la variable i en una unidad por cada vuelta de bucle -->
+              				 <c:set var="i" value="${i+1}"/>
+						</c:forEach>
                					
 
 								<tr>
-                        <td><a href="<%= request.getContextPath()%>/carrito"><input type="button" value="Finalizar compra" id="finalizar" style="margin-left: 195%;"></a></td>
+                        <td><a href="CarritoServlet"><input type="button" value="Finalizar compra" id="finalizar" style="margin-left: 195%;"></a></td>
                         <td>
                             <img src="imagenes/savethegreen/carrito.jfif" class="iconoCarrito" width="150px" height="150px" style="margin-left: 160%;">
                         </td>
