@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <!-- Inclusión de jsp tags -->
 <%@ page import="java.util.List" %>
 <%@ page import="modelos.Producto" %>
 <!DOCTYPE html>
@@ -30,7 +29,17 @@
     
     <script src="jquery-proyecto/jquery-3.4.1.min.js"></script>
     
-    <script type="text/javascript">
+    <script type="text/javascript"></script>
+    
+    <script>
+    $(document).ready(function(){
+
+        $(".logo").hide().fadeIn(1000);
+
+        $(".containerEncabezado").hide().fadeIn(1000);
+
+        $(".nav-pills").hide().fadeIn(1000);
+    
     
    		function confirmaCierre(){
    			
@@ -90,12 +99,13 @@
         <p>Del campo a tu casa</p>
     </div>
     <!--FIN ENCABEZADO PÁGINA -->
-	
+
+         
+     
+              
         <!--NAVEGADOR-->
         
         <nav class="main-nav navbar-collapse collapse" id="primary-nav" style="margin-top: 0%;">
-            
-            
 
             <ul class="nav nav-pills negrita">
                 <li class="dropdown"><a href="indexCliente.jsp">Inicio</a>
@@ -104,64 +114,63 @@
                 <%int cantidad = (int) request.getAttribute("cestaCantidadProd"); %> <!-- cantidad de productos en la cesta actual -->
                 <li><a href="<%= request.getContextPath() %>/productos?accion=Cesta">(<%=cantidad%>)Mi cesta</a></li>
                    <li class="dropdown"><a href="">Mi espacio personal  <img src="imagenes/styled-select-arrow.png" alt=""></a>
-                            <ul class="dropdown-menu">
-                                 
-                               <li><a href="" onclick="confirmaCierre()">Cancelar compra</a></li> 
-                                <li><a href="mostrarExtracto.jsp">Compras anteriores</a></li>
+                            <ul class="dropdown-menu"> 
+                                <li><a href="<%= request.getContextPath() %>/pedido?accion=historial">Compras anteriores</a></li>
                                 <li><a href="<%= request.getContextPath() %>/perfil">Modificar perfil</a></li>
-                                <li class="dropdown"><a href="<%= request.getContextPath() %>/Logout" onclick="confirmaCierre2()">Cerrar sesión</a>
-                            </ul>
-                        </li>
-                 <li class="dropdown"><a href="">Contacta con nosotros  <img src="imagenes/styled-select-arrow.png" alt=""></a>
+                             </ul>
+                    </li>
+                 	<li class="dropdown"><a href="">Contacta con nosotros  <img src="imagenes/styled-select-arrow.png" alt=""></a>
                             <ul class="dropdown-menu">
                                 <li><a href="formularioContactoIniciados.jsp">Correo electrónico</a></li>
                                 <li><a href="ubicacionIniciados.jsp">Dirección. ¿Cómo llegar?</a></li>
                             </ul>
-                        </li>
-                
-            </ul>
+                    </li>
+                    <li class="dropdown"><a href="<%= request.getContextPath() %>/Logout" onclick="confirmaCierre2()">Cerrar sesión</a>
+	            </ul>
             </nav>
-
+ 		<!--FIN NAVEGADOR-->
          </header> 
          
-         <!-- FOTO PRINCIPAL -->
+       <!-- FOTO PRINCIPAL -->
         <section class="cd-hero">
             <img src="imagenes/savethegreen/campo1.jpg" alt="" class="fotoprin">
 
         </section> 
-        <!-- / FIN FOTO PRINCIPAL -->
-         
+        <!-- / FIN FOTO PRINCIPAL -->      
             <!--/FIN CONTENEDOR ENCABEZADO-->
-			<br><br><br>
+			
             <!--CONTENEDOR TIENDA-->
             <section class="bg-blue" style="margin-top: -10%;">
                 <div class="container">     
                 	<div class="heading text-center animate bounceIn informacion"> 
-                	<h1 class="titulo">Todos nuestros productos</h1><br><br><br>
+                	<br><br><br><h1 class="titulo">Todos nuestros productos</h1><br><br><br>
                 	<table id="carrito">
  
-                    	
-                    	<c:set var="i" value="0"/>
+                    	<% List<Producto> productos = (List<Producto>) request.getAttribute("productos"); %>
                         <!--  sacar la lista de productos que guardé en el servlet para poder recorrerla -->
-                       <c:forEach items="${productos}" var="p">
-                       	
-                       	<!--  Cada vez que la i sea divisor de 4,creamos un <tr>-->
-                          <c:if test="${ i % 4 == 0}">
-							<tr>
-						</c:if>
+                       	<% for(int i = 0; i < productos.size(); i++) { 
+                           	Producto p = productos.get(i);
+                           
+                        	 //Cada vez que la i sea divisor de 4,creamos un <tr>
+                           if(i % 4 == 0) { %>  
+ 
+                    	<tr>
+                        	<%	
+                    		}
+                    	%>
 
                     	<td class="productoHover">
-                        	<h2> <span class="referencia">${p._ref} </span><br> ${p._nombreP} </h2>
-                        	<img src="/imagenes/savethegreen/productos/${p.imagen}" style="border-radius: 10%; width: 300px; height: 200px;">
-                        	<span class="referencia"><br>${p._precioP} €/unidad</span>
+                        	<h2> <span class="referenciaA"><%= p.getReferenciaProducto() %> </span><br> <%= p.getNombreProducto() %></h2>
+                        	<img src="<%= request.getContextPath() %>/imagenes/savethegreen/productos/<%= p.getImagen() %>" style="border-radius: 10%; width: 300px; height: 200px;">
+                        	<span class="referencia"><br><%= p.getPrecioProducto() %> €/unidad</span>
                         	<div>
-                        		<form method="post" action="ProductoServlet"  id="taginline" >
-                            		<input type="hidden" name="idProducto" value="${p.id }">      
+                        		<form method="post" action="<%= request.getContextPath() %>/productos?accion=agregar"  id="taginline" >
+                            		<input type="hidden" name="idProducto" value="<%= p.getId() %>">      
                             		<input type="hidden" name="accion" value="agregar">
                             		<button data-text="+" onclick="suma()" class="btn btn-primary anadir botonTienda" type="submit" style="margin-left: -50%; font-weigth: bold; font-size: 1.5em; background-color: #D7B845;">+</button>
                        		 	</form>
-                       			<form method="post" action="ProductoServlet"  id="taginline">
-                            		<input type="hidden" name="idProducto" value="${p.id }">
+                       			<form method="post" action="<%= request.getContextPath() %>/productos?accion=quitar"  id="taginline">
+                            		<input type="hidden" name="idProducto" value="<%= p.getId() %>">
                             		<input type="hidden" name="accion" value="quitar">
                             		<button data-text="-" onclick="resta()" class="btn btn-primary quitar botonTienda" style="background-color: #D7B845; margin-top: -34%; margin-left: 50%; font-weigth: bold; font-size: 1.5em;">-</button>
                             		
@@ -171,17 +180,15 @@
                     	</td>
                     
                        	 <!--  Cada vez que la siguiente i sea divisor de 4,cerramos el tr -->
-                    		   <c:if test="${(i + 1) % 4 == 0}">
+                    		<% if((i + 1) % 4 == 0) { %>   
                   		  		</tr>
-                			   </c:if>
-                			
-                		    <!-- Aumenta la variable i en una unidad por cada vuelta de bucle -->
-              				 <c:set var="i" value="${i+1}"/>
-						</c:forEach>
+                			    <% } %>
+              				  <% } %>
+				
                					
 
 								<tr>
-                        <td><a href="CarritoServlet"><input type="button" value="Finalizar compra" id="finalizar" style="margin-left: 195%;"></a></td>
+                        <td><a href="<%= request.getContextPath()%>/carrito"><input type="button" value="Finalizar compra" id="finalizar" style="margin-left: 195%;"></a></td>
                         <td>
                             <img src="imagenes/savethegreen/carrito.jfif" class="iconoCarrito" width="150px" height="150px" style="margin-left: 160%;">
                         </td>
