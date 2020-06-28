@@ -290,33 +290,6 @@
 <!--FIN FOOTER -->
 
 
-            <script>
-
-                document.getElementById("display").value=0;
-
-                document.getElementById("display-2").value=0;
-
-                document.getElementById("display-3").value=0;
-
-                document.getElementById("display-4").value=0;
-
-                document.getElementById("display-5").value=0;
-
-                document.getElementById("display-6").value=0;
-
-                document.getElementById("display-7").value=0;
-
-                document.getElementById("display-8").value=0;
-
-                document.getElementById("display-9").value=0;
-
-                document.getElementById("display-0").value=0;
-
-                document.getElementById("display-11").value=0;
-
-                document.getElementById("display-12").value=0;
-
-            </script>
    
     
 </body>
